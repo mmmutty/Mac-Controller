@@ -44,13 +44,17 @@
         -webkit-tap-highlight-color: transparent;
       }
       button:active {
-        transform: translateY(4px);
-        box-shadow: none;
-        background: #555;
-      }
-      .full { grid-column: span 2; background: #2457A6; }
-      .danger { color: #F6DA4D; }
-    </style>
+  transform: translateY(4px);
+  box-shadow: none;
+  background: #555;
+}
+.full { grid-column: span 2; background: #2457A6; }
+/* ここを書き換えました */
+.danger {
+  background: #F6DA4D; /* 背景を黄色に */
+  color: #2457A6;       /* 文字を青に */
+}
+</style>
   </head>
   <body>
     <div class="grid">
