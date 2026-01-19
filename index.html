@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Remote</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/2457A6/remote-control.png">
+    
+    <style>
+      /* 全体を黒く固定する設定 */
+      html, body {
+        background-color: #1E1E1E;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* スクロール禁止（バウンス防止） */
+        font-family: -apple-system, sans-serif;
+        touch-action: manipulation;
+        -webkit-user-select: none;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        /* 安全エリア（ノッチなど）を避ける設定 */
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        width: 90%;
+        max-width: 400px;
+      }
+      button {
+        background: #2457A6; border: none; color: white;
+        padding: 25px 0; font-size: 18px; font-weight: bold;
+        border-radius: 12px; box-shadow: 0 4px 0 #000;
+        cursor: pointer; transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+        -webkit-tap-highlight-color: transparent;
+      }
+      button:active {
+        transform: translateY(4px);
+        box-shadow: none;
+        background: #555;
+      }
+      .full { grid-column: span 2; background: #2457A6; }
+      .danger { color: #F6DA4D; }
+    </style>
+  </head>
+  <body>
+    <div class="grid">
+      <button class="full" onclick="send('tab')">Select Next</button>
+      <button onclick="send('left')">⏪ 10s</button>
+      <button onclick="send('right')">10s ⏩</button>
+      <button class="full" style="height:80px; font-size:24px" onclick="send('enter')">OK / CLICK</button>
+      <button class="full danger" onclick="send('play')">Play / Pause</button>
+    </div>
+
+    <script>
+      // ★ここにGASのURLを貼り付けてください★
+      var appUrl = "https://script.google.com/macros/s/AKfycbxXZ0dPo5mFp3lILIpQPHcrZ-oMz8sXN8_Ifl62SDJHfm0X9zh730JkhVdzwTeNFhgc/exec";
+
+      function send(cmd) {
+        var target = appUrl + '?cmd=' + cmd + '&t=' + Date.now();
+        fetch(target, { mode: 'no-cors' });
+        if(navigator.vibrate) navigator.vibrate(50);
+      }
+    </script>
+  </body>
+</html>
