@@ -80,6 +80,10 @@
         background: #F6DA4D;
         color: #2457A6;
         
+        /* 行間を調整して2行を見やすく */
+        line-height: 1.2;
+        text-align: center;
+        
         transition: transform 0.1s, box-shadow 0.1s;
         -webkit-tap-highlight-color: transparent;
       }
@@ -96,7 +100,7 @@
       <button class="btn-skip" onclick="send('left_double')">⏪ 20s</button>
       <button class="btn-skip" onclick="send('right_double')">20s ⏩</button>
 
-      <button class="play-circle" onclick="send('play')">Play Pause</button>
+      <button class="play-circle" onclick="send('play')">Play<br>Pause</button>
     </div>
 
     <script>
