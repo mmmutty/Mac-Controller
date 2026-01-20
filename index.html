@@ -9,13 +9,13 @@
     <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/2457A6/remote-control.png">
     
     <style>
-      /* 全体を黒く固定する設定 */
+      /* ベース設定 */
       html, body {
         background-color: #1E1E1E;
         height: 100%;
         margin: 0;
         padding: 0;
-        overflow: hidden; /* スクロール禁止（バウンス防止） */
+        overflow: hidden;
         font-family: -apple-system, sans-serif;
         touch-action: manipulation;
         -webkit-user-select: none;
@@ -25,44 +25,67 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        /* 安全エリア（ノッチなど）を避ける設定 */
         padding-top: env(safe-area-inset-top);
         padding-bottom: env(safe-area-inset-bottom);
       }
+      
+      /* グリッドレイアウト */
       .grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        width: 90%;
-        max-width: 400px;
+        grid-template-columns: 1fr 1fr; /* 2列 */
+        gap: 20px; /* ボタン間の隙間を少し広めに */
+        width: 85%;
+        max-width: 350px;
+        align-items: center;
       }
+
+      /* 共通ボタン設定 */
       button {
         background: #2457A6; border: none; color: white;
-        padding: 25px 0; font-size: 18px; font-weight: bold;
-        border-radius: 12px; box-shadow: 0 4px 0 #000;
-        cursor: pointer; transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+        font-size: 20px; font-weight: bold;
+        border-radius: 16px; /* 角丸を少し柔らかく */
+        box-shadow: 0 4px 0 #000;
+        cursor: pointer; 
+        transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
         -webkit-tap-highlight-color: transparent;
+        
+        /* 20sボタン用の高さ */
+        height: 80px; 
       }
       button:active {
-  transform: translateY(4px);
-  box-shadow: none;
-  background: #555;
-}
-.full { grid-column: span 2; background: #2457A6; }
-/* ここを書き換えました */
-.danger {
-  background: #F6DA4D; /* 背景を黄色に */
-  color: #2457A6;       /* 文字を青に */
-}
-</style>
+        transform: translateY(4px);
+        box-shadow: none;
+        background: #555;
+      }
+
+      /* Playボタン専用設定（円形・中央配置） */
+      .play-circle {
+        grid-column: span 2; /* 2列分を使って中央に */
+        justify-self: center; /* グリッド内で中央寄せ */
+        
+        width: 130px;  /* 20sボタンより大きめに */
+        height: 130px; /* 正円にするため幅と高さを同じに */
+        border-radius: 50%; /* 完全な丸 */
+        
+        margin-top: 30px; /* 上のボタンとの距離 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        
+        /* 色設定（前回の黄色背景・青文字） */
+        background: #F6DA4D;
+        color: #2457A6;
+      }
+      
+    </style>
   </head>
   <body>
     <div class="grid">
-      <button class="full" onclick="send('tab')">Select Next</button>
-      <button onclick="send('left')">⏪ 10s</button>
-      <button onclick="send('right')">10s ⏩</button>
-      <button class="full" style="height:80px; font-size:24px" onclick="send('enter')">OK / CLICK</button>
-      <button class="full danger" onclick="send('play')">Play / Pause</button>
+      <button onclick="send('left')">⏪ 20s</button>
+      <button onclick="send('right')">20s ⏩</button>
+
+      <button class="play-circle" onclick="send('play')">Play / Pause</button>
     </div>
 
     <script>
@@ -70,6 +93,7 @@
       var appUrl = "https://script.google.com/macros/s/AKfycbxXZ0dPo5mFp3lILIpQPHcrZ-oMz8sXN8_Ifl62SDJHfm0X9zh730JkhVdzwTeNFhgc/exec";
 
       function send(cmd) {
+        // キャッシュ回避の時刻をつけて送信
         var target = appUrl + '?cmd=' + cmd + '&t=' + Date.now();
         fetch(target, { mode: 'no-cors' });
         if(navigator.vibrate) navigator.vibrate(50);
