@@ -32,58 +32,69 @@
       /* グリッドレイアウト */
       .grid {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* 2列 */
-        gap: 20px; /* ボタン間の隙間を少し広めに */
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
         width: 85%;
         max-width: 350px;
         align-items: center;
       }
 
-      /* 共通ボタン設定 */
-      button {
+      /* 20sボタン（青い四角）の設定 */
+      .btn-skip {
         background: #2457A6; border: none; color: white;
         font-size: 20px; font-weight: bold;
-        border-radius: 16px; /* 角丸を少し柔らかく */
+        border-radius: 16px;
         box-shadow: 0 4px 0 #000;
         cursor: pointer; 
         transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
         -webkit-tap-highlight-color: transparent;
-        
-        /* 20sボタン用の高さ */
         height: 80px; 
+        width: 100%;
       }
-      button:active {
+      .btn-skip:active {
         transform: translateY(4px);
         box-shadow: none;
         background: #555;
       }
 
-      /* Playボタン専用設定（円形・中央配置） */
+      /* Playボタン（黄色い丸）の設定 */
       .play-circle {
-        grid-column: span 2; /* 2列分を使って中央に */
-        justify-self: center; /* グリッド内で中央寄せ */
+        grid-column: span 2; /* 中央配置 */
+        justify-self: center;
         
-        width: 130px;  /* 20sボタンより大きめに */
-        height: 130px; /* 正円にするため幅と高さを同じに */
-        border-radius: 50%; /* 完全な丸 */
+        width: 130px;
+        height: 130px;
+        border-radius: 50%; /* 丸くする */
+        border: none;
+        box-shadow: 0 4px 0 #000;
+        cursor: pointer;
         
-        margin-top: 30px; /* 上のボタンとの距離 */
+        margin-top: 30px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 22px;
+        font-weight: bold;
         
-        /* 色設定（前回の黄色背景・青文字） */
+        /* 黄色背景・青文字 */
         background: #F6DA4D;
         color: #2457A6;
+        
+        transition: transform 0.1s, box-shadow 0.1s;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .play-circle:active {
+        transform: translateY(4px);
+        box-shadow: none;
+        background: #C4AE3D; /* クリック時に少し暗く */
       }
       
     </style>
   </head>
   <body>
     <div class="grid">
-      <button onclick="send('left')">⏪ 20s</button>
-      <button onclick="send('right')">20s ⏩</button>
+      <button class="btn-skip" onclick="send('left_double')">⏪ 20s</button>
+      <button class="btn-skip" onclick="send('right_double')">20s ⏩</button>
 
       <button class="play-circle" onclick="send('play')">Play / Pause</button>
     </div>
@@ -93,7 +104,6 @@
       var appUrl = "https://script.google.com/macros/s/AKfycbxXZ0dPo5mFp3lILIpQPHcrZ-oMz8sXN8_Ifl62SDJHfm0X9zh730JkhVdzwTeNFhgc/exec";
 
       function send(cmd) {
-        // キャッシュ回避の時刻をつけて送信
         var target = appUrl + '?cmd=' + cmd + '&t=' + Date.now();
         fetch(target, { mode: 'no-cors' });
         if(navigator.vibrate) navigator.vibrate(50);
