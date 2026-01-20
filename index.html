@@ -52,9 +52,13 @@
         width: 100%;
       }
       .btn-skip:active {
-        transform: translateY(4px);
-        box-shadow: none;
-        background: #555;
+        transform: translateY(4px); /* 下に動くのはそのまま */
+        
+        /* 背景色をグレーではなく「少し暗い青」にする */
+        background: #1b4486; 
+        
+        /* 【重要】外の影を消し、代わりに「内側の影(inset)」をつけて沈み込みを表現 */
+        box-shadow: inset 0 3px 8px rgba(0,0,0,0.4); 
       }
 
       /* Playボタン（黄色い丸）の設定 */
@@ -89,8 +93,12 @@
       }
       .play-circle:active {
         transform: translateY(4px);
-        box-shadow: none;
-        background: #C4AE3D; /* クリック時に少し暗く */
+        
+        /* 背景色を「少し暗い黄色」にする */
+        background: #d9bf38;
+        
+        /* 【重要】内側の影をつけて沈み込みを表現 */
+        box-shadow: inset 0 3px 8px rgba(0,0,0,0.4);
       }
       
     </style>
