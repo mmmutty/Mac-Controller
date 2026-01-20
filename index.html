@@ -29,7 +29,6 @@
         padding-bottom: env(safe-area-inset-bottom);
       }
       
-      /* グリッドレイアウト */
       .grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -39,63 +38,52 @@
         align-items: center;
       }
 
-      /* === 20sボタン（青い四角） === */
+      /* === 20sボタン（青） === */
       .btn-skip {
         background: #2457A6; border: none; color: white;
         font-size: 20px; font-weight: bold;
         border-radius: 16px;
-        box-shadow: 0 6px 0 #000; /* 影を少し深く */
+        box-shadow: 0 6px 0 #000;
         cursor: pointer; 
-        
-        /* 戻る時のアニメーション（少しゆっくり見せる） */
-        transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-        
         -webkit-tap-highlight-color: transparent;
-        height: 80px; 
-        width: 100%;
+        height: 80px; width: 100%;
+        
+        /* 指を離した後の「戻り」をゆっくり見せる (0.3秒) */
+        transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
       }
       
-      /* 押した瞬間（アニメーションなしで即座に沈む） */
-      .btn-skip:active {
-        transition: none; /* ←これが重要！即座に反映 */
-        transform: translateY(6px); /* ガッツリ沈む */
-        box-shadow: inset 0 3px 8px rgba(0,0,0,0.5); /* 内側に濃い影 */
-        background: #1b4486; /* 少し暗い色に */
+      /* === Playボタン（黄色・丸） === */
+      .play-circle {
+        grid-column: span 2; justify-self: center;
+        width: 130px; height: 130px;
+        border-radius: 50%; border: none;
+        box-shadow: 0 6px 0 #000;
+        cursor: pointer;
+        margin-top: 30px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px; font-weight: bold;
+        background: #F6DA4D; color: #2457A6;
+        line-height: 1.2; text-align: center;
+        
+        /* 戻りをゆっくり見せる */
+        transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+        
+        -webkit-tap-highlight-color: transparent;
       }
 
-      /* === Playボタン（黄色い丸） === */
-      .play-circle {
-        grid-column: span 2;
-        justify-self: center;
-        
-        width: 130px;
-        height: 130px;
-        border-radius: 50%;
-        border: none;
-        box-shadow: 0 6px 0 #000; /* 影を少し深く */
-        cursor: pointer;
-        
-        margin-top: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 22px;
-        font-weight: bold;
-        background: #F6DA4D;
-        color: #2457A6;
-        line-height: 1.2;
-        text-align: center;
-        
-        /* 戻る時のアニメーション */
-        transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-        
-        -webkit-tap-highlight-color: transparent;
-      }
+      /* ====== 強制的に沈ませるクラス (.pushed) ====== */
+      /* JavaScriptでこのクラスがついている間は、強制的に沈みます */
       
-      /* 押した瞬間 */
-      .play-circle:active {
-        transition: none; /* 即座に反映 */
-        transform: translateY(6px); /* ガッツリ沈む */
+      .btn-skip.pushed {
+        transition: none; /* 行きは一瞬 */
+        transform: translateY(6px);
+        box-shadow: inset 0 3px 8px rgba(0,0,0,0.5);
+        background: #1b4486;
+      }
+
+      .play-circle.pushed {
+        transition: none; /* 行きは一瞬 */
+        transform: translateY(6px);
         box-shadow: inset 0 3px 8px rgba(0,0,0,0.5);
         background: #d9bf38;
       }
@@ -104,17 +92,29 @@
   </head>
   <body>
     <div class="grid">
-      <button class="btn-skip" onclick="send('left_double')">⏪ 20s</button>
-      <button class="btn-skip" onclick="send('right_double')">20s ⏩</button>
+      <button class="btn-skip" onclick="send('left_double', this)">⏪ 20s</button>
+      <button class="btn-skip" onclick="send('right_double', this)">20s ⏩</button>
 
-      <button class="play-circle" onclick="send('play')">Play<br>Pause</button>
+      <button class="play-circle" onclick="send('play', this)">Play<br>Pause</button>
     </div>
 
     <script>
       // ★ここにGASのURLを貼り付けてください★
       var appUrl = "https://script.google.com/macros/s/AKfycbxXZ0dPo5mFp3lILIpQPHcrZ-oMz8sXN8_Ifl62SDJHfm0X9zh730JkhVdzwTeNFhgc/exec";
 
-      function send(cmd) {
+      // 第2引数 btnElement を受け取るように変更
+      function send(cmd, btnElement) {
+        
+        // 1. ボタンを強制的に沈ませる (.pushed クラスを追加)
+        if(btnElement) {
+           btnElement.classList.add('pushed');
+           
+           // 2. 0.15秒後にクラスを外す（これでボタンがゆっくり戻ってくる）
+           setTimeout(() => {
+             btnElement.classList.remove('pushed');
+           }, 150);
+        }
+
         var target = appUrl + '?cmd=' + cmd + '&t=' + Date.now();
         fetch(target, { mode: 'no-cors' });
         if(navigator.vibrate) navigator.vibrate(50);
